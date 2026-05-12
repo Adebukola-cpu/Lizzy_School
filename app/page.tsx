@@ -561,7 +561,7 @@ import BlogAdminPage from "./blogAdmin/page";
             {/* BRAND */}
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-white mb-3">
-                MySchool
+                LizzySchool
               </h2>
               <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
                 Raising future leaders through excellence, discipline, and innovation.
@@ -603,7 +603,7 @@ import BlogAdminPage from "./blogAdmin/page";
 
               <p className="text-sm sm:text-base mb-2">📍 Osogbo, Osun State</p>
               <p className="text-sm sm:text-base mb-2">📞 +234 808 803 3643</p>
-              <p className="text-sm sm:text-base mb-4">✉️ info@myschool.com</p>
+              <p className="text-sm sm:text-base mb-4">✉️ info@Lizzyschool.com</p>
 
               <Link href="/admissions">
                 <button className="w-full sm:w-auto bg-blue-600 px-4 py-2 rounded-lg text-white hover:bg-blue-700 transition text-sm">
@@ -621,7 +621,7 @@ import BlogAdminPage from "./blogAdmin/page";
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
 
             <p className="text-xs sm:text-sm text-gray-400 text-center sm:text-left">
-              © {new Date().getFullYear()} MySchool. All rights reserved.
+              © {new Date().getFullYear()} LizzySchool. All rights reserved.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">

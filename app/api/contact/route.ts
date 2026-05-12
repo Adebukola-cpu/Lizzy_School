@@ -45,7 +45,7 @@ export async function POST(req: Request) {
 
         // ================= ADMIN EMAIL =================
         await transporter.sendMail({
-            from: `"MySchool" <${process.env.EMAIL_USER}>`,
+            from: `"LizzySchool" <${process.env.EMAIL_USER}>`,
             to: process.env.EMAIL_USER, // 👉 YOU receive it
             subject: `New Message: ${subject}`,
             html: `

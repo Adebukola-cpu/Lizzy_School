@@ -33,7 +33,7 @@ export default function Navbar() {
             <nav className="max-w-7xl mx-auto flex items-center justify-between p-4">
 
                 <Link href="/" className="text-xl font-bold text-blue-600">
-                    MySchool
+                    LizzySchool
                 </Link>
                 <button
                     className="md:hidden"
