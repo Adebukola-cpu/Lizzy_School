@@ -1,0 +1,44 @@
+{
+  "name": "school_website",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@apollo/client": "^4.1.9",
+    "@apollo/server": "^5.5.0",
+    "@as-integrations/next": "^4.1.0",
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.10.0",
+    "formik": "^2.4.9",
+    "framer-motion": "^12.38.0",
+    "graphql-tag": "^2.12.6",
+    "jose": "^6.2.2",
+    "jspdf": "^4.2.1",
+    "mongoose": "^9.5.0",
+    "next": "16.1.6",
+    "next-auth": "^4.24.14",
+    "nodemailer": "^7.0.13",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-idle-timer": "^5.7.3",
+    "server-only": "^0.0.1",
+    "swr": "^2.4.1",
+    "yup": "^1.7.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/nodemailer": "^8.0.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
