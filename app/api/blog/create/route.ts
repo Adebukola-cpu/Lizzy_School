@@ -1,8 +1,9 @@
 import { dbConnect } from "@/app/lib/dbconnect";
 import BlogModel from "@/app/models/blog";
 import { getToken } from "next-auth/jwt";
+import { NextRequest } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
     try {
         await dbConnect();
 
