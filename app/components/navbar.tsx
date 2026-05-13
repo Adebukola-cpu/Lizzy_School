@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function Navbar() {
     const { data: session } = useSession();
@@ -31,9 +32,21 @@ export default function Navbar() {
         >
 
             <nav className="max-w-7xl mx-auto flex items-center justify-between p-4">
+                
+                <Link href="/" className="flex items-center gap-2">
 
-                <Link href="/" className="text-xl font-bold text-blue-600">
-                    LizzySchool
+                    <Image
+                        src="/lizy_logo.png"
+                        alt="Lizzy School Logo"
+                        width={100}
+                        height={60}
+                        className="object-contain"
+                    />
+
+                    <span className="text-xl font-bold text-blue-600">
+                        Lizzy School
+                    </span>
+
                 </Link>
                 <button
                     className="md:hidden"

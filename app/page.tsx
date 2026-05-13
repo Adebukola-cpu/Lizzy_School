@@ -561,6 +561,13 @@ import BlogAdminPage from "./blogAdmin/page";
             {/* BRAND */}
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-white mb-3">
+                <Image
+                    src="/lizy_logo.png"
+                    alt="Lizzy School Logo"
+                    width={100}
+                    height={60}
+                    className="object-contain"
+                />
                 LizzySchool
               </h2>
               <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
