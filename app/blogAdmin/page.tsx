@@ -109,6 +109,17 @@ export default function BlogAdminPage() {
         }
     };
 
+    const blogCategories = [
+        "School News",
+        "Admissions",
+        "Events",
+        "Academics",
+        "Examinations",
+        "Sports",
+        "Announcements",
+        "Scholarships",
+    ];
+
     return (
 
         <main className="max-w-3xl mx-auto p-6">
@@ -151,8 +162,7 @@ export default function BlogAdminPage() {
 
                     {/* CATEGORY */}
 
-                    <input
-                        placeholder="Category"
+                    <select
                         className="w-full border p-4 rounded-xl"
                         value={form.category}
                         onChange={(e) =>
@@ -161,7 +171,15 @@ export default function BlogAdminPage() {
                                 category: e.target.value,
                             })
                         }
-                    />
+                    >
+                        <option value="">Select Category</option>
+
+                        {blogCategories.map((cat) => (
+                            <option key={cat} value={cat}>
+                                {cat}
+                            </option>
+                        ))}
+                    </select>
 
                     {/* IMAGE */}
 

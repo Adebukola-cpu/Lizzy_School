@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import LogoutButton from "../components/logoutButton";
 
 export default function Navbar() {
     const { data: session } = useSession();
@@ -128,8 +129,8 @@ export default function Navbar() {
                         )}
                     </div>
 
-                    <Link href="/boarding">Boarding_Program</Link>
-                    <Link href="/signup">Admin</Link>
+                    <Link href="/boarding">Boarding Program</Link>
+                    {/* <Link href="/signup">Admin</Link> */}
 
                     {/* ================= RESOURCES ================= */}
 
@@ -201,17 +202,10 @@ export default function Navbar() {
 
                     </Link>
 
-                    {/* APPLY */}
+                    <div className="px-4 py-2 justify-between items-center font-medium rounded-lg  transition">
+                        <LogoutButton />
+                    </div>
 
-                    <Link href="/signup">
-
-                        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-
-                            Apply
-
-                        </button>
-
-                    </Link>
 
                 </div>
 
@@ -320,6 +314,10 @@ export default function Navbar() {
                             </button>
 
                         </Link>
+
+                        <div className="w-full justify-between items-center font-medium rounded-lg  transition">
+                            <LogoutButton />
+                        </div>
 
                     </div>
 

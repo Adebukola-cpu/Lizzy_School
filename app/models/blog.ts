@@ -15,7 +15,10 @@ const blogSchema = new mongoose.Schema(
 
         image: String,
 
-        category: String,
+        category: {
+            type: String,
+            required: true,
+        },
     },
     {
         timestamps: true,

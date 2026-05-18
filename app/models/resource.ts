@@ -5,7 +5,11 @@ const ResourceSchema = new mongoose.Schema(
         title: String,
         description: String,
         category: String,
-        type: String, // PDF | LINK | ZIP
+        resourceType: {
+            type: String,
+            enum: ["video", "pdf", "image"],
+            default: "video",
+        },
         className: String,
         fileUrl: String,
     },

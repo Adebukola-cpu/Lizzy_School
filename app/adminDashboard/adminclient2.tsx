@@ -266,6 +266,10 @@ export default function AdminClient({ students }: { students: Student[] }) {
 
                 </div>
 
+                <div className="mt-10">
+                    <LogoutButton />
+                </div>
+
                 <div className="space-y-2 mb-6">
 
                     <Link
@@ -290,12 +294,6 @@ export default function AdminClient({ students }: { students: Student[] }) {
                     </Link>
 
                 </div>
-
-                <div className="mt-10">
-                    <LogoutButton />
-                </div>
-
-                
 
             </aside>
 
@@ -323,459 +321,459 @@ export default function AdminClient({ students }: { students: Student[] }) {
                 {/* CONTENT FOR DASHBOARD */}
                 {openSection === "dashboard" && (
                     <>
-                        {/* SEARCH */}
-                        <input
-                            placeholder="Search students..."
-                            className="border p-2 mb-6 w-full rounded"
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
-
-                        {/* CARD GRID */}
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-                            {filtered.map((s) => {
-
-                                const results = resultsMap[s._id] || [];
-
-                                return (
-                                    <div key={s._id} className="bg-white p-4 rounded-xl shadow">
-
-                                        {/* HEADER */}
-                                        <div className="flex items-center gap-3 mb-3">
-                                            <Image
-                                                src={s.profileImage || "/avatar.png"}
-                                                alt="student"
-                                                width={50}
-                                                height={50}
-                                                className="rounded-full"
-                                            />
-
-                                            <div>
-                                                <h2 className="font-bold">
-                                                    {s.firstname} {s.middlename || ""} {s.lastname}
-                                                </h2>
-                                                <p className="text-sm text-gray-500">{s.email}</p>
-                                            </div>
-                                        </div>
-
-                                        {/* RESULTS */}
-                                        <div className="mb-3">
-                                            <h3 className="font-semibold text-sm mb-2">Results</h3>
-
-                                            {results.length === 0 ? (
-                                                <p className="text-xs text-gray-400">No results</p>
-                                            ) : (
-                                                results.map((r: any) => (
-                                                    <div
-                                                        key={r._id}
-                                                        className="flex justify-between items-center border p-2 mb-1 rounded"
-                                                    >
-                                                        <span className="text-sm">
-                                                            {r.subject}: {r.score} ({r.className || "No class"})
-                                                        </span>
-
-                                                        <div className="flex gap-2 text-xs">
-
+                         {/* SEARCH */}
+                                    <input
+                                        placeholder="Search students..."
+                                        className="border p-2 mb-6 w-full rounded"
+                                        onChange={(e) => setSearch(e.target.value)}
+                                    />
+                        
+                                    {/* CARD GRID */}
+                                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        
+                                        {filtered.map((s) => {
+                        
+                                            const results = resultsMap[s._id] || [];
+                        
+                                            return (
+                                                <div key={s._id} className="bg-white p-4 rounded-xl shadow">
+                        
+                                                    {/* HEADER */}
+                                                    <div className="flex items-center gap-3 mb-3">
+                                                        <Image
+                                                            src={s.profileImage || "/avatar.png"}
+                                                            alt="student"
+                                                            width={50}
+                                                            height={50}
+                                                            className="rounded-full"
+                                                        />
+                        
+                                                        <div>
+                                                            <h2 className="font-bold">
+                                                                {s.firstname} {s.middlename || ""} {s.lastname}
+                                                            </h2>
+                                                            <p className="text-sm text-gray-500">{s.email}</p>
+                                                        </div>
+                                                    </div>
+                        
+                                                    {/* RESULTS */}
+                                                    <div className="mb-3">
+                                                        <h3 className="font-semibold text-sm mb-2">Results</h3>
+                        
+                                                        {results.length === 0 ? (
+                                                            <p className="text-xs text-gray-400">No results</p>
+                                                        ) : (
+                                                            results.map((r: any) => (
+                                                                <div
+                                                                    key={r._id}
+                                                                    className="flex justify-between items-center border p-2 mb-1 rounded"
+                                                                >
+                                                                    <span className="text-sm">
+                                                                        {r.subject}: {r.score} ({r.className || "No class"})
+                                                                    </span>
+                        
+                                                                    <div className="flex gap-2 text-xs">
+                        
+                                                                        <button
+                                                                            onClick={() => {
+                                                                                setResultStudent(s);
+                                                                                setEditingResultId(r._id);
+                                                                                setResultForm({
+                                                                                    subject: r.subject || "",
+                                                                                    score: r.score || "",
+                                                                                    className: r.className || "", // ✅ FIXED
+                                                                                    term: r.term || "",
+                                                                                    session: r.session || "",
+                                                                                });
+                                                                            }}
+                                                                            className="text-blue-600"
+                                                                        >
+                                                                            Edit
+                                                                        </button>
+                        
+                                                                        <button
+                                                                            onClick={async () => {
+                                                                                await fetch("/api/result/delete", {
+                                                                                    method: "POST",
+                                                                                    headers: { "Content-Type": "application/json" },
+                                                                                    body: JSON.stringify({ id: r._id }),
+                                                                                });
+                        
+                                                                                setResultsMap((prev) => ({
+                                                                                    ...prev,
+                                                                                    [s._id]: prev[s._id].filter((x: any) => x._id !== r._id),
+                                                                                }));
+                                                                            }}
+                                                                            className="text-red-600"
+                                                                        >
+                                                                            Delete
+                                                                        </button>
+                        
+                                                                    </div>
+                                                                </div>
+                                                            ))
+                                                        )}
+                                                    </div>
+                        
+                                                    {/* ACTIONS */}
+                                                    <div className="flex flex-wrap gap-2 text-sm">
+                        
+                                                        <button
+                                                            onClick={() => {
+                                                                setEditingStudent(s);
+                                                                setEditForm({
+                                                                    firstname: s.firstname || "",
+                                                                    middlename: s.middlename || "",
+                                                                    lastname: s.lastname || "",
+                                                                });
+                                                            }}
+                                                            className="text-blue-600"
+                                                        >
+                                                            Edit
+                                                        </button>
+                        
+                                                        <button
+                                                            onClick={() => {
+                                                                setResultStudent(s);
+                                                                setEditingResultId(null);
+                                                                setResultForm({
+                                                                    subject: "",
+                                                                    score: "",
+                                                                    term: "",
+                                                                    session: "",
+                                                                    className: "",
+                                                                });
+                                                            }}
+                                                            className="text-green-600"
+                                                        >
+                                                            Add Result
+                                                        </button>
+                        
+                                                        {showDeleteStudent === s._id ? (
+                        
+                                                            <div className="flex gap-2">
+                        
+                                                                <button
+                                                                    onClick={async () => {
+                        
+                                                                        try {
+                        
+                                                                            const res = await fetch("/api/student/delete", {
+                                                                                method: "POST",
+                                                                                headers: {
+                                                                                    "Content-Type": "application/json",
+                                                                                },
+                                                                                body: JSON.stringify({
+                                                                                    id: s._id,
+                                                                                }),
+                                                                            });
+                        
+                                                                            const data = await res.json();
+                        
+                                                                            if (data.success) {
+                        
+                                                                                setStudentsState((prev) =>
+                                                                                    prev.filter((x) => x._id !== s._id)
+                                                                                );
+                        
+                                                                                setAdminMessage(
+                                                                                    "Student deleted successfully"
+                                                                                );
+                        
+                                                                            } else {
+                        
+                                                                                setAdminError(
+                                                                                    data.message || "Delete failed"
+                                                                                );
+                        
+                                                                            }
+                        
+                                                                        } catch (error) {
+                        
+                                                                            console.log(error);
+                        
+                                                                            setAdminError("Something went wrong");
+                        
+                                                                        }
+                        
+                                                                        setShowDeleteStudent(null);
+                        
+                                                                    }}
+                                                                    className="bg-red-600 text-white px-3 py-1 rounded"
+                                                                >
+                                                                    Confirm
+                                                                </button>
+                        
+                                                                <button
+                                                                    onClick={() => setShowDeleteStudent(null)}
+                                                                    className="border px-3 py-1 rounded"
+                                                                >
+                                                                    Cancel
+                                                                </button>
+                        
+                                                            </div>
+                        
+                                                        ) : (
+                        
                                                             <button
-                                                                onClick={() => {
-                                                                    setResultStudent(s);
-                                                                    setEditingResultId(r._id);
-                                                                    setResultForm({
-                                                                        subject: r.subject || "",
-                                                                        score: r.score || "",
-                                                                        className: r.className || "", // ✅ FIXED
-                                                                        term: r.term || "",
-                                                                        session: r.session || "",
-                                                                    });
-                                                                }}
-                                                                className="text-blue-600"
-                                                            >
-                                                                Edit
-                                                            </button>
-
-                                                            <button
-                                                                onClick={async () => {
-                                                                    await fetch("/api/result/delete", {
-                                                                        method: "POST",
-                                                                        headers: { "Content-Type": "application/json" },
-                                                                        body: JSON.stringify({ id: r._id }),
-                                                                    });
-
-                                                                    setResultsMap((prev) => ({
-                                                                        ...prev,
-                                                                        [s._id]: prev[s._id].filter((x: any) => x._id !== r._id),
-                                                                    }));
-                                                                }}
+                                                                onClick={() => setShowDeleteStudent(s._id)}
                                                                 className="text-red-600"
                                                             >
                                                                 Delete
                                                             </button>
-
-                                                        </div>
+                        
+                                                        )}
+                        
                                                     </div>
-                                                ))
-                                            )}
-                                        </div>
-
-                                        {/* ACTIONS */}
-                                        <div className="flex flex-wrap gap-2 text-sm">
-
-                                            <button
-                                                onClick={() => {
-                                                    setEditingStudent(s);
-                                                    setEditForm({
-                                                        firstname: s.firstname || "",
-                                                        middlename: s.middlename || "",
-                                                        lastname: s.lastname || "",
-                                                    });
-                                                }}
-                                                className="text-blue-600"
-                                            >
-                                                Edit
-                                            </button>
-
-                                            <button
-                                                onClick={() => {
-                                                    setResultStudent(s);
-                                                    setEditingResultId(null);
-                                                    setResultForm({
-                                                        subject: "",
-                                                        score: "",
-                                                        term: "",
-                                                        session: "",
-                                                        className: "",
-                                                    });
-                                                }}
-                                                className="text-green-600"
-                                            >
-                                                Add Result
-                                            </button>
-
-                                            {showDeleteStudent === s._id ? (
-
-                                                <div className="flex gap-2">
-
+                        
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                        
+                                    {/* ================= EDIT STUDENT MODAL ================= */}
+                                    {editingStudent && (
+                                        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
+                                            <div className="bg-white p-6 rounded w-96">
+                        
+                                                <h2 className="font-bold mb-4">Edit Student</h2>
+                        
+                                                <input
+                                                    className="border p-2 w-full mb-2"
+                                                    value={editForm.firstname}
+                                                    onChange={(e) =>
+                                                        setEditForm({ ...editForm, firstname: e.target.value })
+                                                    }
+                                                    placeholder="First Name"
+                                                />
+                        
+                                                <input
+                                                    className="border p-2 w-full mb-2"
+                                                    value={editForm.middlename}
+                                                    onChange={(e) =>
+                                                        setEditForm({ ...editForm, middlename: e.target.value })
+                                                    }
+                                                    placeholder="Middle Name"
+                                                />
+                        
+                                                <input
+                                                    className="border p-2 w-full mb-4"
+                                                    value={editForm.lastname}
+                                                    onChange={(e) =>
+                                                        setEditForm({ ...editForm, lastname: e.target.value })
+                                                    }
+                                                    placeholder="Last Name"
+                                                />
+                        
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    className="border p-2 w-full mb-4"
+                                                    onChange={(e) => {
+                                                        if (e.target.files?.[0]) {
+                                                            setEditImage(e.target.files[0]);
+                                                        }
+                                                    }}
+                                                />
+                        
+                                                <div className="flex justify-end gap-2">
+                                                    <button onClick={() => setEditingStudent(null)} className="border px-3 py-1">
+                                                        Cancel
+                                                    </button>
+                        
                                                     <button
                                                         onClick={async () => {
-
+                        
                                                             try {
-
-                                                                const res = await fetch("/api/student/delete", {
-                                                                    method: "POST",
-                                                                    headers: {
-                                                                        "Content-Type": "application/json",
-                                                                    },
-                                                                    body: JSON.stringify({
-                                                                        id: s._id,
-                                                                    }),
-                                                                });
-
-                                                                const data = await res.json();
-
-                                                                if (data.success) {
-
-                                                                    setStudentsState((prev) =>
-                                                                        prev.filter((x) => x._id !== s._id)
-                                                                    );
-
-                                                                    setAdminMessage(
-                                                                        "Student deleted successfully"
-                                                                    );
-
-                                                                } else {
-
-                                                                    setAdminError(
-                                                                        data.message || "Delete failed"
-                                                                    );
-
+                        
+                                                                const formData = new FormData();
+                        
+                                                                formData.append("id", editingStudent._id);
+                                                                formData.append("firstname", editForm.firstname);
+                                                                formData.append("middlename", editForm.middlename);
+                                                                formData.append("lastname", editForm.lastname);
+                        
+                                                                if (editImage) {
+                                                                    formData.append("profileImage", editImage);
                                                                 }
-
+                        
+                                                                const res = await fetch("/api/student/update", {
+                                                                    method: "POST",
+                                                                    body: formData,
+                                                                });
+                        
+                                                                const data = await res.json();
+                        
+                                                                if (data.success) {
+                        
+                                                                    setStudentsState((prev) =>
+                                                                        prev.map((x) =>
+                                                                            x._id === editingStudent._id
+                                                                                ? data.student
+                                                                                : x
+                                                                        )
+                                                                    );
+                        
+                                                                    setAdminMessage("Student updated successfully");
+                        
+                                                                } else {
+                        
+                                                                    setAdminError(data.message || "Update failed");
+                        
+                                                                }
+                        
                                                             } catch (error) {
-
+                        
                                                                 console.log(error);
-
                                                                 setAdminError("Something went wrong");
-
+                        
                                                             }
-
-                                                            setShowDeleteStudent(null);
-
+                        
+                                                            setEditingStudent(null);
+                                                            setEditImage(null);
+                        
                                                         }}
-                                                        className="bg-red-600 text-white px-3 py-1 rounded"
+                                                        className="bg-blue-600 text-white px-3 py-1"
                                                     >
-                                                        Confirm
+                                                        Save
                                                     </button>
-
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                        
+                                    {/* ================= RESULT MODAL ================= */}
+                                    {resultStudent && (
+                                        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
+                                            <div className="bg-white p-6 rounded w-96">
+                        
+                                                <h2 className="font-bold mb-4">
+                                                    {editingResultId ? "Edit Result" : "Add Result"}
+                                                </h2>
+                        
+                                                <input
+                                                    placeholder="Class (e.g SS2)"
+                                                    className="border p-2 w-full mb-2"
+                                                    value={resultForm.className}
+                                                    onChange={(e) =>
+                                                        setResultForm({ ...resultForm, className: e.target.value })
+                                                    }
+                                                />
+                        
+                                                <input
+                                                    placeholder="Subject"
+                                                    className="border p-2 w-full mb-2"
+                                                    value={resultForm.subject}
+                                                    onChange={(e) =>
+                                                        setResultForm({ ...resultForm, subject: e.target.value })
+                                                    }
+                                                />
+                        
+                                                <input
+                                                    placeholder="Score"
+                                                    type="number"
+                                                    className="border p-2 w-full mb-2"
+                                                    value={resultForm.score}
+                                                    onChange={(e) =>
+                                                        setResultForm({ ...resultForm, score: e.target.value })
+                                                    }
+                                                />
+                        
+                                                <input
+                                                    placeholder="Term"
+                                                    className="border p-2 w-full mb-2"
+                                                    value={resultForm.term}
+                                                    onChange={(e) =>
+                                                        setResultForm({ ...resultForm, term: e.target.value })
+                                                    }
+                                                />
+                        
+                                                <input
+                                                    placeholder="Session"
+                                                    className="border p-2 w-full mb-4"
+                                                    value={resultForm.session}
+                                                    onChange={(e) =>
+                                                        setResultForm({ ...resultForm, session: e.target.value })
+                                                    }
+                                                />
+                        
+                                                <div className="flex gap-2">
                                                     <button
-                                                        onClick={() => setShowDeleteStudent(null)}
-                                                        className="border px-3 py-1 rounded"
+                                                        onClick={() => {
+                                                            setResultStudent(null);
+                                                            setEditingResultId(null);
+                                                        }}
+                                                        className="border px-3 py-1 w-full"
                                                     >
                                                         Cancel
                                                     </button>
-
+                        
+                                                    <button
+                                                        onClick={async () => {
+                        
+                                                            if (editingResultId) {
+                                                                const res = await fetch("/api/result/update", {
+                                                                    method: "POST",
+                                                                    headers: { "Content-Type": "application/json" },
+                                                                    body: JSON.stringify({
+                                                                        id: editingResultId,
+                                                                        ...resultForm,
+                                                                    }),
+                                                                });
+                        
+                                                                if (!res.ok) {
+                                                                    console.error("Update failed");
+                                                                    return;
+                                                                }
+                        
+                                                                const data = await res.json();
+                        
+                                                                setResultsMap((prev) => ({
+                                                                    ...prev,
+                                                                    [resultStudent._id]: prev[resultStudent._id].map((r: any) =>
+                                                                        r._id === editingResultId ? data.updated : r
+                                                                    ),
+                                                                }));
+                        
+                                                            } else {
+                                                                const res = await fetch("/api/result/create", {
+                                                                    method: "POST",
+                                                                    headers: { "Content-Type": "application/json" },
+                                                                    body: JSON.stringify({
+                                                                        studentId: resultStudent._id,
+                                                                        ...resultForm,
+                                                                    }),
+                                                                });
+                        
+                                                                if (!res.ok) {
+                                                                    console.error("Create failed");
+                                                                    return;
+                                                                }
+                        
+                                                                const data = await res.json();
+                                                                console.log(data);
+                        
+                                                                setResultsMap((prev) => ({
+                                                                    ...prev,
+                                                                    [resultStudent._id]: [
+                                                                        ...(prev[resultStudent._id] || []),
+                                                                        data.result,
+                                                                    ],
+                                                                }));
+                                                            }
+                        
+                                                            setResultStudent(null);
+                                                            setEditingResultId(null);
+                                                        }}
+                                                        className="bg-green-600 text-white px-3 py-1 w-full"
+                                                    >
+                                                        Save
+                                                    </button>
                                                 </div>
-
-                                            ) : (
-
-                                                <button
-                                                    onClick={() => setShowDeleteStudent(s._id)}
-                                                    className="text-red-600"
-                                                >
-                                                    Delete
-                                                </button>
-
-                                            )}
-
+                        
+                                            </div>
                                         </div>
-
-                                    </div>
-                                );
-                            })}
-                        </div>
-
-                        {/* ================= EDIT STUDENT MODAL ================= */}
-                        {editingStudent && (
-                            <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
-                                <div className="bg-white p-6 rounded w-96">
-
-                                    <h2 className="font-bold mb-4">Edit Student</h2>
-
-                                    <input
-                                        className="border p-2 w-full mb-2"
-                                        value={editForm.firstname}
-                                        onChange={(e) =>
-                                            setEditForm({ ...editForm, firstname: e.target.value })
-                                        }
-                                        placeholder="First Name"
-                                    />
-
-                                    <input
-                                        className="border p-2 w-full mb-2"
-                                        value={editForm.middlename}
-                                        onChange={(e) =>
-                                            setEditForm({ ...editForm, middlename: e.target.value })
-                                        }
-                                        placeholder="Middle Name"
-                                    />
-
-                                    <input
-                                        className="border p-2 w-full mb-4"
-                                        value={editForm.lastname}
-                                        onChange={(e) =>
-                                            setEditForm({ ...editForm, lastname: e.target.value })
-                                        }
-                                        placeholder="Last Name"
-                                    />
-
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        className="border p-2 w-full mb-4"
-                                        onChange={(e) => {
-                                            if (e.target.files?.[0]) {
-                                                setEditImage(e.target.files[0]);
-                                            }
-                                        }}
-                                    />
-
-                                    <div className="flex justify-end gap-2">
-                                        <button onClick={() => setEditingStudent(null)} className="border px-3 py-1">
-                                            Cancel
-                                        </button>
-
-                                        <button
-                                            onClick={async () => {
-
-                                                try {
-
-                                                    const formData = new FormData();
-
-                                                    formData.append("id", editingStudent._id);
-                                                    formData.append("firstname", editForm.firstname);
-                                                    formData.append("middlename", editForm.middlename);
-                                                    formData.append("lastname", editForm.lastname);
-
-                                                    if (editImage) {
-                                                        formData.append("profileImage", editImage);
-                                                    }
-
-                                                    const res = await fetch("/api/student/update", {
-                                                        method: "POST",
-                                                        body: formData,
-                                                    });
-
-                                                    const data = await res.json();
-
-                                                    if (data.success) {
-
-                                                        setStudentsState((prev) =>
-                                                            prev.map((x) =>
-                                                                x._id === editingStudent._id
-                                                                    ? data.student
-                                                                    : x
-                                                            )
-                                                        );
-
-                                                        setAdminMessage("Student updated successfully");
-
-                                                    } else {
-
-                                                        setAdminError(data.message || "Update failed");
-
-                                                    }
-
-                                                } catch (error) {
-
-                                                    console.log(error);
-                                                    setAdminError("Something went wrong");
-
-                                                }
-
-                                                setEditingStudent(null);
-                                                setEditImage(null);
-
-                                            }}
-                                            className="bg-blue-600 text-white px-3 py-1"
-                                        >
-                                            Save
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* ================= RESULT MODAL ================= */}
-                        {resultStudent && (
-                            <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
-                                <div className="bg-white p-6 rounded w-96">
-
-                                    <h2 className="font-bold mb-4">
-                                        {editingResultId ? "Edit Result" : "Add Result"}
-                                    </h2>
-
-                                    <input
-                                        placeholder="Class (e.g SS2)"
-                                        className="border p-2 w-full mb-2"
-                                        value={resultForm.className}
-                                        onChange={(e) =>
-                                            setResultForm({ ...resultForm, className: e.target.value })
-                                        }
-                                    />
-
-                                    <input
-                                        placeholder="Subject"
-                                        className="border p-2 w-full mb-2"
-                                        value={resultForm.subject}
-                                        onChange={(e) =>
-                                            setResultForm({ ...resultForm, subject: e.target.value })
-                                        }
-                                    />
-
-                                    <input
-                                        placeholder="Score"
-                                        type="number"
-                                        className="border p-2 w-full mb-2"
-                                        value={resultForm.score}
-                                        onChange={(e) =>
-                                            setResultForm({ ...resultForm, score: e.target.value })
-                                        }
-                                    />
-
-                                    <input
-                                        placeholder="Term"
-                                        className="border p-2 w-full mb-2"
-                                        value={resultForm.term}
-                                        onChange={(e) =>
-                                            setResultForm({ ...resultForm, term: e.target.value })
-                                        }
-                                    />
-
-                                    <input
-                                        placeholder="Session"
-                                        className="border p-2 w-full mb-4"
-                                        value={resultForm.session}
-                                        onChange={(e) =>
-                                            setResultForm({ ...resultForm, session: e.target.value })
-                                        }
-                                    />
-
-                                    <div className="flex gap-2">
-                                        <button
-                                            onClick={() => {
-                                                setResultStudent(null);
-                                                setEditingResultId(null);
-                                            }}
-                                            className="border px-3 py-1 w-full"
-                                        >
-                                            Cancel
-                                        </button>
-
-                                        <button
-                                            onClick={async () => {
-
-                                                if (editingResultId) {
-                                                    const res = await fetch("/api/result/update", {
-                                                        method: "POST",
-                                                        headers: { "Content-Type": "application/json" },
-                                                        body: JSON.stringify({
-                                                            id: editingResultId,
-                                                            ...resultForm,
-                                                        }),
-                                                    });
-
-                                                    if (!res.ok) {
-                                                        console.error("Update failed");
-                                                        return;
-                                                    }
-
-                                                    const data = await res.json();
-
-                                                    setResultsMap((prev) => ({
-                                                        ...prev,
-                                                        [resultStudent._id]: prev[resultStudent._id].map((r: any) =>
-                                                            r._id === editingResultId ? data.updated : r
-                                                        ),
-                                                    }));
-
-                                                } else {
-                                                    const res = await fetch("/api/result/create", {
-                                                        method: "POST",
-                                                        headers: { "Content-Type": "application/json" },
-                                                        body: JSON.stringify({
-                                                            studentId: resultStudent._id,
-                                                            ...resultForm,
-                                                        }),
-                                                    });
-
-                                                    if (!res.ok) {
-                                                        console.error("Create failed");
-                                                        return;
-                                                    }
-
-                                                    const data = await res.json();
-                                                    console.log(data);
-
-                                                    setResultsMap((prev) => ({
-                                                        ...prev,
-                                                        [resultStudent._id]: [
-                                                            ...(prev[resultStudent._id] || []),
-                                                            data.result,
-                                                        ],
-                                                    }));
-                                                }
-
-                                                setResultStudent(null);
-                                                setEditingResultId(null);
-                                            }}
-                                            className="bg-green-600 text-white px-3 py-1 w-full"
-                                        >
-                                            Save
-                                        </button>
-                                    </div>
-
-                                </div>
-                            </div>
-                        )}
+                                    )}
                     </>
                 )}
 

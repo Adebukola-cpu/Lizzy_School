@@ -1,20 +1,30 @@
-
 import { dbConnect } from "@/app/lib/dbconnect";
 import UserModel from "@/app/models/user";
 import bcrypt from "bcryptjs";
 import { sendMail } from "@/app/lib/nodemailer";
 
 export async function POST(req: Request) {
+
     await dbConnect();
 
-    const { firstname, lastname, email, password, role } = await req.json();
+    const {
+        firstname,
+        middlename,
+        lastname,
+        age,
+        DOB,
+        email,
+        password,
+        role,
+    } = await req.json();
 
     // check if user exists
     const existingUser = await UserModel.findOne({ email });
+
     if (existingUser) {
         return Response.json(
             { message: "User already exists" },
-            { status: 400 }
+            { status: 409 }
         );
     }
 
@@ -22,7 +32,10 @@ export async function POST(req: Request) {
 
     const user = await UserModel.create({
         firstname,
+        middlename,
         lastname,
+        age,
+        DOB,
         email,
         password: hashedPassword,
         role,
@@ -58,7 +71,7 @@ export async function POST(req: Request) {
             </h2>
 
             <p>
-                Thank you for registering at <strong>MySchool Portal</strong>.
+                Thank you for registering at <strong>Lizzy School Portal</strong>.
             </p>
 
             <p>
@@ -89,7 +102,7 @@ export async function POST(req: Request) {
             <div style="text-align:center;margin:40px 0;">
 
                 <a 
-                    href="http://localhost:3000/login"
+                    href="https://lizzy-school-s4qa.vercel.app/login"
                     style="
                         display:inline-block;
                         background:#2563eb;

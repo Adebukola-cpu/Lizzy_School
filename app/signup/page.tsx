@@ -9,8 +9,15 @@ export default function Signup() {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
     const [showLoginSuggestion, setShowLoginSuggestion] = useState(false);
     const [email, setEmail] = useState("");
+
+    // ✅ VALIDATORS (MUST BE OUTSIDE handleSubmit)
+    const validateEmail = (email: string) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
 
     const validatePassword = (password: string) => {
         const minLength = password.length >= 6;
@@ -33,10 +40,16 @@ export default function Signup() {
 
         setEmail(formEmail);
 
-        // ✅ PASSWORD VALIDATION FIRST
+        // ✅ FINAL CHECK BEFORE SUBMIT
+        if (!validateEmail(formEmail)) {
+            setEmailError("Invalid email address");
+            setLoading(false);
+            return;
+        }
+
         if (!validatePassword(password)) {
-            setError(
-                "Password must be at least 6 characters and include a letter, number, and symbol."
+            setPasswordError(
+                "Password must contain letter, number, symbol and 6+ characters"
             );
             setLoading(false);
             return;
@@ -48,7 +61,10 @@ export default function Signup() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     firstname: e.target.firstname.value,
+                    middlename: e.target.middlename.value,
                     lastname: e.target.lastname.value,
+                    age: e.target.age.value,
+                    DOB: e.target.DOB.value,
                     email: formEmail,
                     password,
                     role: "student",
@@ -60,7 +76,6 @@ export default function Signup() {
             if (!res.ok) {
                 setError(data.message || "Signup failed");
 
-                // 👇 user already exists case
                 if (res.status === 409) {
                     setShowLoginSuggestion(true);
                 }
@@ -69,7 +84,6 @@ export default function Signup() {
                 return;
             }
 
-            // 🔥 AUTO LOGIN
             const login = await signIn("credentials", {
                 redirect: false,
                 email: formEmail,
@@ -82,8 +96,7 @@ export default function Signup() {
                 return;
             }
 
-            router.push("/registerStudents");
-
+            router.push("/studentPortal");
         } catch (err) {
             setError("Something went wrong. Try again.");
             setLoading(false);
@@ -92,51 +105,71 @@ export default function Signup() {
 
     return (
         <main className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-
             <form
                 onSubmit={handleSubmit}
                 className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg space-y-5"
             >
-
                 <h1 className="text-2xl font-bold text-center text-blue-600">
                     Create Account
                 </h1>
 
-                {/* First Name */}
-                <input
-                    name="firstname"
-                    placeholder="First Name"
-                    className="w-full border p-3 rounded-lg"
-                    required
-                />
+                <input name="firstname" placeholder="First Name" className="w-full border p-3 rounded-lg" required />
 
-                {/* Last Name */}
-                <input
-                    name="lastname"
-                    placeholder="Last Name"
-                    className="w-full border p-3 rounded-lg"
-                    required
-                />
+                <input name="middlename" placeholder="Middle Name" className="w-full border p-3 rounded-lg" />
 
-                {/* Email */}
+                <input name="lastname" placeholder="Last Name" className="w-full border p-3 rounded-lg" required />
+
+                <input name="age" type="number" placeholder="Age" className="w-full border p-3 rounded-lg" required />
+
+                <input name="DOB" type="date" className="w-full border p-3 rounded-lg" required />
+
+                {/* EMAIL */}
                 <input
                     name="email"
                     type="email"
                     placeholder="Email"
                     className="w-full border p-3 rounded-lg"
                     required
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setEmail(value);
+
+                        if (!validateEmail(value)) {
+                            setEmailError("Invalid email address");
+                        } else {
+                            setEmailError("");
+                        }
+                    }}
                 />
 
-                {/* Password */}
+                {emailError && (
+                    <p className="text-red-500 text-sm">{emailError}</p>
+                )}
+
+                {/* PASSWORD */}
                 <input
                     name="password"
                     type="password"
                     placeholder="Password"
                     className="w-full border p-3 rounded-lg"
                     required
+                    onChange={(e) => {
+                        const value = e.target.value;
+
+                        if (!validatePassword(value)) {
+                            setPasswordError(
+                                "Must contain letter, number, symbol and 6+ characters"
+                            );
+                        } else {
+                            setPasswordError("");
+                        }
+                    }}
                 />
 
-                {/* Button */}
+                {passwordError && (
+                    <p className="text-red-500 text-sm">{passwordError}</p>
+                )}
+
                 <button
                     type="submit"
                     disabled={loading}
@@ -145,16 +178,12 @@ export default function Signup() {
                     {loading ? "Creating account..." : "Sign Up"}
                 </button>
 
-                {/* ❌ ERROR MESSAGE */}
                 {error && (
-                    <p className="text-red-500 text-sm text-center">
-                        {error}
-                    </p>
+                    <p className="text-red-500 text-sm text-center">{error}</p>
                 )}
 
-                {/* 🔥 LOGIN SUGGESTION */}
                 {showLoginSuggestion && (
-                    <div className="bg-yellow-100 text-yellow-800 p-3 rounded text-sm text-center space-y-2">
+                    <div className="bg-yellow-100 text-yellow-800 p-3 rounded text-sm text-center">
                         <p>User already exists with this email.</p>
 
                         <button
@@ -164,36 +193,8 @@ export default function Signup() {
                         >
                             Login instead
                         </button>
-
-                        <button
-                            type="button"
-                            onClick={async () => {
-                                const login = await signIn("credentials", {
-                                    redirect: false,
-                                    email,
-                                    password: "",
-                                });
-
-                                router.push("/login");
-                            }}
-                            className="block text-green-600 underline"
-                        >
-                            Try auto-login
-                        </button>
                     </div>
                 )}
-
-                {/* Footer */}
-                <p className="text-sm text-center text-gray-500">
-                    Already have an account?{" "}
-                    <span
-                        onClick={() => router.push("/login")}
-                        className="text-blue-600 cursor-pointer hover:underline"
-                    >
-                        Login
-                    </span>
-                </p>
-
             </form>
         </main>
     );

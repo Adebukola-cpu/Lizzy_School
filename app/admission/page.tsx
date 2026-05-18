@@ -28,7 +28,7 @@ export default function AdmissionsPage() {
 
                 <div>
                     <h2 className="text-3xl font-bold mb-4 text-gray-800">
-                        Welcome to Our School
+                        Welcome to Lizzy School
                     </h2>
                     <p className="text-gray-600 mb-4">
                         We are excited that you are considering our school for your child.
@@ -95,7 +95,7 @@ export default function AdmissionsPage() {
                         </h3>
                         <p className="text-gray-600 mb-4">
                             Learn about the documents and criteria required for admission
-                            into our school.
+                            into Lizzy school.
                         </p>
 
                         <Link href="/admission/requirements">
@@ -127,7 +127,7 @@ export default function AdmissionsPage() {
             {/* ================= WHY CHOOSE US ================= */}
             <section className="py-20 px-6 bg-white">
                 <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
-                    Why Choose Our School
+                    Why Choose Lizzy School
                 </h2>
 
                 <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">

@@ -6,15 +6,12 @@ import Link from "next/link"
 import LogoutButton from "../components/logoutButton";
 
 
-
-
-
 type Resource = {
     _id: string;
     title: string;
     description: string;
     category: string;
-    type: string;
+    resourceType: string;
     className?: string;
     fileUrl: string;
 };
@@ -208,13 +205,29 @@ export default function ResourcesPage() {
                                     {/* BUTTONS */}
                                     <div className="flex gap-3 mt-6">
 
-                                        <a
-                                            href={item.fileUrl}
-                                            target="_blank"
-                                            className="flex-1 bg-blue-600 text-white py-3 rounded-xl text-center hover:bg-blue-700 transition font-medium"
-                                        >
-                                            Open
-                                        </a>
+                                        {item.resourceType === "video" ? (
+
+                                            <video
+                                                controls
+                                                className="w-full rounded-xl"
+                                            >
+                                                <source
+                                                    src={item.fileUrl}
+                                                    type="video/mp4"
+                                                />
+                                            </video>
+
+                                        ) : (
+
+                                            <a
+                                                href={item.fileUrl}
+                                                target="_blank"
+                                                className="flex-1 bg-blue-600 text-white py-3 rounded-xl text-center hover:bg-blue-700 transition font-medium"
+                                            >
+                                                Open
+                                            </a>
+
+                                        )}
 
                                     </div>
 

@@ -13,7 +13,12 @@ import { signOut } from "next-auth/react";
 export default function StudentClient({ student }: any) {
     const [results, setResults] = useState<any[]>([]);
     const [editMode, setEditMode] = useState(false);
-
+    const [imageUploading, setImageUploading] = useState(false);
+    const [uploadError, setUploadError] = useState("");
+    const [uploadSuccess, setUploadSuccess] = useState("");
+    const [profileSuccess, setProfileSuccess] = useState("");
+    const [profileError, setProfileError] = useState("");
+    const [sessionMessage, setSessionMessage] = useState("");
     const [form, setForm] = useState({
         firstname: student.firstname || "",
         middlename: student.middlename || "",
@@ -79,11 +84,20 @@ export default function StudentClient({ student }: any) {
 
     useIdleTimer({
         timeout: 1000 * 60 * 15, // 15 minutes
+
         onIdle: () => {
-            alert("Session expired");
-            signOut({ callbackUrl: "/login" });
+
+            setSessionMessage("Session expired. Redirecting...");
+
+            setTimeout(() => {
+
+                signOut({ callbackUrl: "/login" });
+
+            }, 2000);
+
         },
     });
+    
 
     return (
         <main className="min-h-screen bg-gray-100 p-6">
@@ -100,19 +114,110 @@ export default function StudentClient({ student }: any) {
                 </button>
             </Link>
 
-            <div className="flex justify-between items-center mb-4">
-                <LogoutButton />
-            </div>
+            {sessionMessage && (
+                <div className="bg-red-100 text-red-600 p-3 rounded mb-4">
+                    {sessionMessage}
+                </div>
+            )}
 
             {/* ================= HEADER ================= */}
             <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 mb-6">
-                <Image
-                    src={student.profileImage || "/avatar.png"}
-                    alt="profile"
-                    width={80}
-                    height={80}
-                    className="rounded-full object-cover"
-                />
+                <div className="flex flex-col items-center gap-2">
+
+                    <Image
+                        src={student.profileImage || "/avatar.png"}
+                        alt="profile"
+                        width={80}
+                        height={80}
+                        className="rounded-full object-cover"
+                    />
+
+                    <label className="bg-blue-600 text-white px-3 py-1 rounded cursor-pointer text-sm hover:bg-blue-700">
+
+                        {imageUploading ? "Uploading..." : "Change Photo"}
+
+                        <input
+                            type="file"
+                            accept="image/*"
+                            hidden
+                            onChange={async (e) => {
+
+                                setUploadError("");
+                                setUploadSuccess("");
+
+                                const file = e.target.files?.[0];
+
+                                if (!file) return;
+
+                                // FILE SIZE VALIDATION
+                                if (file.size > 2 * 1024 * 1024) {
+
+                                    setUploadError("Image must be less than 2MB");
+
+                                    return;
+                                }
+
+                                setImageUploading(true);
+
+                                try {
+
+                                    const formData = new FormData();
+
+                                    formData.append("image", file);
+
+                                    const res = await fetch(
+                                        "/api/student/upload-image",
+                                        {
+                                            method: "POST",
+                                            body: formData,
+                                        }
+                                    );
+
+                                    const data = await res.json();
+
+                                    if (data.success) {
+
+                                        setUploadSuccess(
+                                            "Profile image updated successfully"
+                                        );
+
+                                        window.location.reload();
+
+                                    } else {
+
+                                        setUploadError(
+                                            data.message || "Upload failed"
+                                        );
+                                    }
+
+                                } catch (err) {
+
+                                    console.error(err);
+
+                                    setUploadError("Something went wrong");
+                                }
+
+                                setImageUploading(false);
+                            }}
+                        />
+                    </label>
+
+                    {/* ERROR MESSAGE */}
+                    {uploadError && (
+                        <p className="text-red-500 text-xs text-center">
+                            {uploadError}
+                        </p>
+                    )}
+
+                    {/* SUCCESS MESSAGE */}
+                    {uploadSuccess && (
+                        <p className="text-green-600 text-xs text-center">
+                            {uploadSuccess}
+                        </p>
+                    )}
+
+                </div>
+
 
                 <div>
                     <h1 className="text-xl font-bold">
@@ -218,24 +323,62 @@ export default function StudentClient({ student }: any) {
                         <div className="mt-2">
                             <button
                                 onClick={async () => {
-                                    await fetch("/api/student/update-self", {
+                                    setProfileError("");
+                                    setProfileSuccess("");
+                                    try {
+                            const res = await fetch("/api/student/update-self", {
                                         method: "POST",
                                         headers: { "Content-Type": "application/json" },
                                         body: JSON.stringify(form),
-                                    });
+                                     });
 
-                                    alert("Profile updated!");
+                            const data = await res.json();
 
-                                    setEditMode(false);
+                                        if (data.success) {
+
+                                            setProfileSuccess(
+                                                "Profile updated successfully"
+                                            );
+
+                                            setEditMode(false);
+
+                                        } else {
+
+                                            setProfileError(
+                                                data.message || "Update failed"
+                                            );
+                                        }
+
+                                    } catch (err) {
+
+                                        setProfileError("Something went wrong");
+                                    }
                                 }}
                                 className="bg-green-600 text-white px-3 py-1"
                             >
                                 Save
                             </button>
+
+                            {profileError && (
+                                <p className="text-red-500 text-sm mt-2">
+                                    {profileError}
+                                </p>
+                            )}
+
+                            {profileSuccess && (
+                                <p className="text-green-600 text-sm mt-2">
+                                    {profileSuccess}
+                                </p>
+                            )}
                         </div>
                     </div>
                 )}
             </div>
+
+            <div className="flex justify-between items-center mb-4 p-3">
+                <LogoutButton />
+            </div>
+
         </main>
     );
 }

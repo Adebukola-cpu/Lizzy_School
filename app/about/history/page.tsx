@@ -27,18 +27,18 @@ export default function HistoryPage() {
             <section className="max-w-5xl mx-auto px-6 py-16">
                 <div className="bg-white p-8 rounded-2xl shadow">
                     <h2 className="text-2xl font-bold mb-4 text-blue-600">
-                        About MySchool
+                        About Lizzy School
                         
                     </h2>
 
                     <p className="text-gray-600 leading-relaxed">
-                        MySchool was established in 2005 with a strong commitment to raising a new generation
+                        Lizzy School was established in 2005 with a strong commitment to raising a new generation
                         of students equipped with knowledge, discipline, and strong moral values.
                         The school began as a small learning initiative driven by the belief that
                         quality education should be accessible, structured, and impactful.
                         <br /><br />
 
-                        In its early days, MySchool operated with a modest number of students and a
+                        In its early days, Lizzy School operated with a modest number of students and a
                         dedicated team of educators. Despite limited resources, the focus remained
                         on academic excellence and character building.
                         <br /><br />
