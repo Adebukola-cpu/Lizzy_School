@@ -107,33 +107,93 @@ export default function LoginPage() {
 
     const [error, setError] = useState("");
 
+
+    // const handleSubmit = async (e: any) => {
+    //     e.preventDefault();
+
+    //     setLoading(true);
+    //     setError("");
+
+    //     const res = await signIn("credentials", {
+    //         email,
+    //         password,
+    //         redirect: false,
+    //     });
+
+    //     if (res?.error) {
+    //         setError("Invalid email or password");
+    //         setLoading(false);
+    //         return;
+    //     }
+    //     const sessionRes = await fetch("/api/auth/session");
+    //     const session = await sessionRes.json();
+
+    //     const role = session?.user?.role;
+
+    //     if (role === "admin") {
+    //         window.location.href = "/adminDashboard";
+    //     } else {
+    //         window.location.href = "/studentPortal";
+    //     }
+    // };
+
     const handleSubmit = async (e: any) => {
+
         e.preventDefault();
 
         setLoading(true);
         setError("");
 
-        const res = await signIn("credentials", {
-            email,
-            password,
-            redirect: false,
-        });
+        try {
 
-        if (res?.error) {
-            setError("Invalid email or password");
+            const res = await signIn("credentials", {
+                email,
+                password,
+                redirect: false,
+            });
+
+            console.log("SIGNIN RESPONSE:", res);
+
+            if (res?.error) {
+
+                setError("Invalid email or password");
+                setLoading(false);
+                return;
+            }
+
+            // WAIT SMALL TIME FOR SESSION TO UPDATE
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+
+            const sessionRes = await fetch("/api/auth/session");
+
+            const session = await sessionRes.json();
+
+            console.log("SESSION:", session);
+
+            const role = session?.user?.role;
+
+            if (role === "admin") {
+
+                router.push("/adminDashboard");
+
+            } else if (role === "student") {
+
+                router.push("/studentPortal");
+
+            } else {
+
+                setError("No role found in session");
+            }
+
+        } catch (err) {
+
+            console.log(err);
+
+            setError("Something went wrong");
+
+        } finally {
+
             setLoading(false);
-            return;
-        }
-
-        const sessionRes = await fetch("/api/auth/session");
-        const session = await sessionRes.json();
-
-        const role = session?.user?.role;
-
-        if (role === "admin") {
-            window.location.href = "/adminDashboard";
-        } else {
-            window.location.href = "/studentPortal";
         }
     };
 
