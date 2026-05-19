@@ -24,6 +24,7 @@ export default function StudentClient({ student }: any) {
         middlename: student.middlename || "",
         lastname: student.lastname || "",
     });
+    const [openSection, setOpenSection] = useState("profile");
 
     useEffect(() => {
         let isMounted = true;
@@ -100,284 +101,753 @@ export default function StudentClient({ student }: any) {
     
 
     return (
-        <main className="min-h-screen bg-gray-100 p-6">
-            <Link
-                href="/"
-                className="inline-block mb-4 bg-black text-white px-4 py-2 rounded-lg"
-            >
-                ← Back Home
-            </Link>
+        // <main className="min-h-screen bg-gray-100 p-6">
+        //     <Link
+        //         href="/"
+        //         className="inline-block mb-4 bg-black text-white px-4 py-2 rounded-lg"
+        //     >
+        //         ← Back Home
+        //     </Link>
 
-            <Link href="/resources">
-                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-                    Resources
-                </button>
-            </Link>
+        //     <Link href="/resources">
+        //         <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+        //             Resources
+        //         </button>
+        //     </Link>
 
-            {sessionMessage && (
-                <div className="bg-red-100 text-red-600 p-3 rounded mb-4">
-                    {sessionMessage}
+        //     {sessionMessage && (
+        //         <div className="bg-red-100 text-red-600 p-3 rounded mb-4">
+        //             {sessionMessage}
+        //         </div>
+        //     )}
+
+        //     {/* ================= HEADER ================= */}
+        //     <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 mb-6">
+        //         <div className="flex flex-col items-center gap-2">
+
+        //             <Image
+        //                 src={student.profileImage || "/avatar.png"}
+        //                 alt="profile"
+        //                 width={80}
+        //                 height={80}
+        //                 className="rounded-full object-cover"
+        //             />
+
+        //             <label className="bg-blue-600 text-white px-3 py-1 rounded cursor-pointer text-sm hover:bg-blue-700">
+
+        //                 {imageUploading ? "Uploading..." : "Change Photo"}
+
+        //                 <input
+        //                     type="file"
+        //                     accept="image/*"
+        //                     hidden
+        //                     onChange={async (e) => {
+
+        //                         setUploadError("");
+        //                         setUploadSuccess("");
+
+        //                         const file = e.target.files?.[0];
+
+        //                         if (!file) return;
+
+        //                         // FILE SIZE VALIDATION
+        //                         if (file.size > 2 * 1024 * 1024) {
+
+        //                             setUploadError("Image must be less than 2MB");
+
+        //                             return;
+        //                         }
+
+        //                         setImageUploading(true);
+
+        //                         try {
+
+        //                             const formData = new FormData();
+
+        //                             formData.append("image", file);
+
+        //                             const res = await fetch(
+        //                                 "/api/student/upload-image",
+        //                                 {
+        //                                     method: "POST",
+        //                                     body: formData,
+        //                                 }
+        //                             );
+
+        //                             const data = await res.json();
+
+        //                             if (data.success) {
+
+        //                                 setUploadSuccess(
+        //                                     "Profile image updated successfully"
+        //                                 );
+
+        //                                 window.location.reload();
+
+        //                             } else {
+
+        //                                 setUploadError(
+        //                                     data.message || "Upload failed"
+        //                                 );
+        //                             }
+
+        //                         } catch (err) {
+
+        //                             console.error(err);
+
+        //                             setUploadError("Something went wrong");
+        //                         }
+
+        //                         setImageUploading(false);
+        //                     }}
+        //                 />
+        //             </label>
+
+        //             {/* ERROR MESSAGE */}
+        //             {uploadError && (
+        //                 <p className="text-red-500 text-xs text-center">
+        //                     {uploadError}
+        //                 </p>
+        //             )}
+
+        //             {/* SUCCESS MESSAGE */}
+        //             {uploadSuccess && (
+        //                 <p className="text-green-600 text-xs text-center">
+        //                     {uploadSuccess}
+        //                 </p>
+        //             )}
+
+        //         </div>
+
+
+        //         <div>
+        //             <h1 className="text-xl font-bold">
+        //                 {form.firstname} {form.middlename} {form.lastname}
+        //             </h1>
+        //             <p className="text-gray-500">{student.email}</p>
+        //         </div>
+        //     </div>
+
+        //     {/* ================= DASHBOARD ================= */}
+        //     <div className="grid md:grid-cols-3 gap-6">
+        //         <div className="bg-white p-5 rounded-xl shadow">
+        //             <h2 className="font-semibold mb-2">Profile</h2>
+        //             <p className="text-sm text-gray-500">
+        //                   <button
+        //                         onClick={() => setEditMode(!editMode)}
+        //                         className="text-blue-600"
+        //                     >
+        //                     View and update your information
+        //                     </button>
+        //             </p>
+        //         </div>
+
+        //         <div className="bg-white p-5 rounded-xl shadow">
+        //             <h2 className="font-semibold mb-2">Results</h2>
+        //             <p className="text-sm text-gray-500">
+        //                 <button
+        //                     onClick={downloadPDF}
+        //                     className="bg-blue-600 text-white px-4 py-2 rounded"
+        //                 >
+        //                     Download PDF
+        //                 </button>
+        //             </p>
+        //         </div>
+        //     </div>
+
+        //     {/* ================= RESULTS ================= */}
+        //     <div className="mt-6 bg-white p-4 rounded shadow">
+        //         <h2 className="font-bold mb-3">My Results</h2>
+
+        //         {results.length === 0 ? (
+        //             <p>No results yet</p>
+        //         ) : (
+        //             <>
+        //                 {/* ✅ TABLE ONLY TABLE CONTENT */}
+        //                 <table className="w-full border">
+        //                     <thead>
+        //                         <tr className="bg-gray-100">
+        //                             <th className="p-2">Class</th>
+        //                             <th className="p-2">Subject</th>
+        //                             <th className="p-2">Score</th>
+        //                             <th className="p-2">Term</th>
+        //                             <th className="p-2">Session</th>
+        //                         </tr>
+        //                     </thead>
+
+        //                     <tbody>
+        //                             {results?.filter(Boolean).map((r: any) => (
+        //                             <tr key={r._id} className="border-t">
+        //                                 <td className="p-2">{r.className}</td>
+        //                                 <td className="p-2">{r.subject}</td>
+        //                                 <td className="p-2">{r.score}</td>
+        //                                 <td className="p-2">{r.term}</td>
+        //                                 <td className="p-2">{r.session}</td>
+        //                             </tr>
+        //                         ))}
+        //                     </tbody>
+        //                 </table>
+
+        //             </>
+        //         )}
+
+        //         {/* ================= EDIT PROFILE ================= */}
+        //         {editMode && (
+        //             <div className="mt-4 bg-gray-100 p-4 rounded">
+        //                 <input
+        //                     value={form.firstname}
+        //                     onChange={(e) =>
+        //                         setForm({ ...form, firstname: e.target.value })
+        //                     }
+        //                     className="border p-2 mr-2 mb-2"
+        //                     placeholder="First Name"
+        //                 />
+
+        //                 <input
+        //                     value={form.middlename}
+        //                     onChange={(e) =>
+        //                         setForm({ ...form, middlename: e.target.value })
+        //                     }
+        //                     className="border p-2 mr-2 mb-2"
+        //                     placeholder="Middle Name"
+        //                 />
+
+        //                 <input
+        //                     value={form.lastname}
+        //                     onChange={(e) =>
+        //                         setForm({ ...form, lastname: e.target.value })
+        //                     }
+        //                     className="border p-2 mr-2 mb-2"
+        //                     placeholder="Last Name"
+        //                 />
+
+        //                 <div className="mt-2">
+        //                     <button
+        //                         onClick={async () => {
+        //                             setProfileError("");
+        //                             setProfileSuccess("");
+        //                             try {
+        //                     const res = await fetch("/api/student/update-self", {
+        //                                 method: "POST",
+        //                                 headers: { "Content-Type": "application/json" },
+        //                                 body: JSON.stringify(form),
+        //                              });
+
+        //                     const data = await res.json();
+
+        //                                 if (data.success) {
+
+        //                                     setProfileSuccess(
+        //                                         "Profile updated successfully"
+        //                                     );
+
+        //                                     setEditMode(false);
+
+        //                                 } else {
+
+        //                                     setProfileError(
+        //                                         data.message || "Update failed"
+        //                                     );
+        //                                 }
+
+        //                             } catch (err) {
+
+        //                                 setProfileError("Something went wrong");
+        //                             }
+        //                         }}
+        //                         className="bg-green-600 text-white px-3 py-1"
+        //                     >
+        //                         Save
+        //                     </button>
+
+        //                     {profileError && (
+        //                         <p className="text-red-500 text-sm mt-2">
+        //                             {profileError}
+        //                         </p>
+        //                     )}
+
+        //                     {profileSuccess && (
+        //                         <p className="text-green-600 text-sm mt-2">
+        //                             {profileSuccess}
+        //                         </p>
+        //                     )}
+        //                 </div>
+        //             </div>
+        //         )}
+        //     </div>
+
+        //     <div className="flex justify-between items-center mb-4 p-3">
+        //         <LogoutButton />
+        //     </div>
+
+        // </main>
+
+        <main className="flex flex-col md:flex-row min-h-screen bg-gray-100">
+
+            {/* ================= SIDEBAR ================= */}
+
+            <aside className="w-full md:w-64 bg-white shadow-lg p-4 md:h-screen md:sticky top-0 overflow-y-auto">
+
+                <h1 className="text-2xl font-bold text-blue-600 mb-6">
+                    Student Portal
+                </h1>
+
+                <div className="space-y-3">
+
+                    {/* PROFILE */}
+
+                    <button
+                        onClick={() => setOpenSection("profile")}
+                        className="w-full text-left font-semibold bg-gray-100 hover:bg-blue-100 transition p-3 rounded-lg"
+                    >
+                        Profile
+                    </button>
+
+                    {/* RESULTS */}
+
+                    <button
+                        onClick={() => setOpenSection("results")}
+                        className="w-full text-left font-semibold bg-gray-100 hover:bg-blue-100 transition p-3 rounded-lg"
+                    >
+                        Results
+                    </button>
+
+                    {/* RESOURCES */}
+
+                    <button
+                        onClick={() => setOpenSection("resources")}
+                        className="w-full text-left font-semibold bg-gray-100 hover:bg-blue-100 transition p-3 rounded-lg"
+                    >
+                        Resources
+                    </button>
+
                 </div>
-            )}
 
-            {/* ================= HEADER ================= */}
-            <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 mb-6">
-                <div className="flex flex-col items-center gap-2">
+                {/* LINKS */}
 
-                    <Image
-                        src={student.profileImage || "/avatar.png"}
-                        alt="profile"
-                        width={80}
-                        height={80}
-                        className="rounded-full object-cover"
-                    />
+                <div className="space-y-2 mt-10">
 
-                    <label className="bg-blue-600 text-white px-3 py-1 rounded cursor-pointer text-sm hover:bg-blue-700">
+                    <Link
+                        href="/"
+                        className="block bg-black text-white px-4 py-2 rounded-lg text-center"
+                    >
+                        Back Home
+                    </Link>
 
-                        {imageUploading ? "Uploading..." : "Change Photo"}
-
-                        <input
-                            type="file"
-                            accept="image/*"
-                            hidden
-                            onChange={async (e) => {
-
-                                setUploadError("");
-                                setUploadSuccess("");
-
-                                const file = e.target.files?.[0];
-
-                                if (!file) return;
-
-                                // FILE SIZE VALIDATION
-                                if (file.size > 2 * 1024 * 1024) {
-
-                                    setUploadError("Image must be less than 2MB");
-
-                                    return;
-                                }
-
-                                setImageUploading(true);
-
-                                try {
-
-                                    const formData = new FormData();
-
-                                    formData.append("image", file);
-
-                                    const res = await fetch(
-                                        "/api/student/upload-image",
-                                        {
-                                            method: "POST",
-                                            body: formData,
-                                        }
-                                    );
-
-                                    const data = await res.json();
-
-                                    if (data.success) {
-
-                                        setUploadSuccess(
-                                            "Profile image updated successfully"
-                                        );
-
-                                        window.location.reload();
-
-                                    } else {
-
-                                        setUploadError(
-                                            data.message || "Upload failed"
-                                        );
-                                    }
-
-                                } catch (err) {
-
-                                    console.error(err);
-
-                                    setUploadError("Something went wrong");
-                                }
-
-                                setImageUploading(false);
-                            }}
-                        />
-                    </label>
-
-                    {/* ERROR MESSAGE */}
-                    {uploadError && (
-                        <p className="text-red-500 text-xs text-center">
-                            {uploadError}
-                        </p>
-                    )}
-
-                    {/* SUCCESS MESSAGE */}
-                    {uploadSuccess && (
-                        <p className="text-green-600 text-xs text-center">
-                            {uploadSuccess}
-                        </p>
-                    )}
+                    <Link
+                        href="/resources"
+                        className="block bg-blue-600 text-white px-4 py-2 rounded-lg text-center"
+                    >
+                        Resources
+                    </Link>
 
                 </div>
 
+                {/* LOGOUT */}
 
-                <div>
-                    <h1 className="text-xl font-bold">
-                        {form.firstname} {form.middlename} {form.lastname}
-                    </h1>
-                    <p className="text-gray-500">{student.email}</p>
-                </div>
-            </div>
-
-            {/* ================= DASHBOARD ================= */}
-            <div className="grid md:grid-cols-3 gap-6">
-                <div className="bg-white p-5 rounded-xl shadow">
-                    <h2 className="font-semibold mb-2">Profile</h2>
-                    <p className="text-sm text-gray-500">
-                          <button
-                                onClick={() => setEditMode(!editMode)}
-                                className="text-blue-600"
-                            >
-                            View and update your information
-                            </button>
-                    </p>
+                <div className="mt-10">
+                    <LogoutButton />
                 </div>
 
-                <div className="bg-white p-5 rounded-xl shadow">
-                    <h2 className="font-semibold mb-2">Results</h2>
-                    <p className="text-sm text-gray-500">
-                        <button
-                            onClick={downloadPDF}
-                            className="bg-blue-600 text-white px-4 py-2 rounded"
-                        >
-                            Download PDF
-                        </button>
-                    </p>
-                </div>
-            </div>
+            </aside>
 
-            {/* ================= RESULTS ================= */}
-            <div className="mt-6 bg-white p-4 rounded shadow">
-                <h2 className="font-bold mb-3">My Results</h2>
+            {/* ================= RIGHT CONTENT ================= */}
 
-                {results.length === 0 ? (
-                    <p>No results yet</p>
-                ) : (
+            <section className="flex-1 p-6 overflow-y-auto">
+
+                {sessionMessage && (
+                    <div className="bg-red-100 text-red-600 p-3 rounded mb-4">
+                        {sessionMessage}
+                    </div>
+                )}
+
+                {/* HEADER */}
+
+                {/* ================= PROFILE SECTION ================= */}
+
+                {openSection === "profile" && (
+
                     <>
-                        {/* ✅ TABLE ONLY TABLE CONTENT */}
-                        <table className="w-full border">
-                            <thead>
-                                <tr className="bg-gray-100">
-                                    <th className="p-2">Class</th>
-                                    <th className="p-2">Subject</th>
-                                    <th className="p-2">Score</th>
-                                    <th className="p-2">Term</th>
-                                    <th className="p-2">Session</th>
-                                </tr>
-                            </thead>
 
-                            <tbody>
-                                    {results?.filter(Boolean).map((r: any) => (
-                                    <tr key={r._id} className="border-t">
-                                        <td className="p-2">{r.className}</td>
-                                        <td className="p-2">{r.subject}</td>
-                                        <td className="p-2">{r.score}</td>
-                                        <td className="p-2">{r.term}</td>
-                                        <td className="p-2">{r.session}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                        {/* HEADER */}
+
+                        <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 mb-6">
+
+                            <div className="flex flex-col items-center gap-2">
+
+                                <Image
+                                    src={student.profileImage || "/avatar.png"}
+                                    alt="profile"
+                                    width={80}
+                                    height={80}
+                                    className="rounded-full object-cover"
+                                />
+
+                                <label className="bg-blue-600 text-white px-3 py-1 rounded cursor-pointer text-sm hover:bg-blue-700">
+
+                                    {imageUploading ? "Uploading..." : "Change Photo"}
+
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        hidden
+                                        onChange={async (e) => {
+
+                                            setUploadError("");
+                                            setUploadSuccess("");
+
+                                            const file = e.target.files?.[0];
+
+                                            if (!file) return;
+
+                                            if (file.size > 2 * 1024 * 1024) {
+                                                setUploadError("Image must be less than 2MB");
+                                                return;
+                                            }
+
+                                            setImageUploading(true);
+
+                                            try {
+
+                                                const formData = new FormData();
+
+                                                formData.append("image", file);
+
+                                                const res = await fetch(
+                                                    "/api/student/upload-image",
+                                                    {
+                                                        method: "POST",
+                                                        body: formData,
+                                                    }
+                                                );
+
+                                                const data = await res.json();
+
+                                                if (data.success) {
+
+                                                    setUploadSuccess(
+                                                        "Profile image updated successfully"
+                                                    );
+
+                                                    window.location.reload();
+
+                                                } else {
+
+                                                    setUploadError(
+                                                        data.message || "Upload failed"
+                                                    );
+                                                }
+
+                                            } catch (err) {
+
+                                                console.error(err);
+
+                                                setUploadError("Something went wrong");
+                                            }
+
+                                            setImageUploading(false);
+                                        }}
+                                    />
+                                </label>
+
+                                {uploadError && (
+                                    <p className="text-red-500 text-xs text-center">
+                                        {uploadError}
+                                    </p>
+                                )}
+
+                                {uploadSuccess && (
+                                    <p className="text-green-600 text-xs text-center">
+                                        {uploadSuccess}
+                                    </p>
+                                )}
+
+                            </div>
+
+                            <div>
+                                <h1 className="text-xl font-bold">
+                                    {form.firstname} {form.middlename} {form.lastname}
+                                </h1>
+
+                                <p className="text-gray-500">
+                                    {student.email}
+                                </p>
+                            </div>
+
+                        </div>
+
+                        {/* DASHBOARD CARDS */}
+
+                        <div className="grid md:grid-cols-3 gap-6">
+
+                            <div className="bg-white p-5 rounded-xl shadow">
+
+                                <h2 className="font-semibold mb-2">Profile</h2>
+
+                                <button
+                                    onClick={() => setEditMode(!editMode)}
+                                    className="text-blue-600 text-sm"
+                                >
+                                    View and update your information
+                                </button>
+
+                            </div>
+
+                            <div className="bg-white p-5 rounded-xl shadow">
+
+                                <h2 className="font-semibold mb-2">Results</h2>
+
+                                <button
+                                    onClick={downloadPDF}
+                                    className="bg-blue-600 text-white px-4 py-2 rounded"
+                                >
+                                    Download PDF
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        {/* ================= EDIT PROFILE ================= */}
+
+                        {editMode && (
+
+                            <div className="mt-6 bg-white p-6 rounded-xl shadow">
+
+                                <h2 className="font-bold text-lg mb-4">
+                                    Edit Profile
+                                </h2>
+
+                                <input
+                                    value={form.firstname}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            firstname: e.target.value,
+                                        })
+                                    }
+                                    className="border p-2 w-full mb-3 rounded"
+                                    placeholder="First Name"
+                                />
+
+                                <input
+                                    value={form.middlename}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            middlename: e.target.value,
+                                        })
+                                    }
+                                    className="border p-2 w-full mb-3 rounded"
+                                    placeholder="Middle Name"
+                                />
+
+                                <input
+                                    value={form.lastname}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            lastname: e.target.value,
+                                        })
+                                    }
+                                    className="border p-2 w-full mb-3 rounded"
+                                    placeholder="Last Name"
+                                />
+
+                                <button
+                                    onClick={async () => {
+
+                                        setProfileError("");
+                                        setProfileSuccess("");
+
+                                        try {
+
+                                            const formData = new FormData();
+
+                                            formData.append("id", student._id);
+
+                                            formData.append("firstname", form.firstname);
+
+                                            formData.append("middlename", form.middlename);
+
+                                            formData.append("lastname", form.lastname);
+
+                                            const res = await fetch(
+                                                "/api/student/update",
+                                                {
+                                                    method: "POST",
+                                                    body: formData,
+                                                }
+                                            );
+
+                                            const data = await res.json();
+
+                                            if (data.success) {
+
+                                                setProfileSuccess(
+                                                    "Profile updated successfully"
+                                                );
+
+                                                setEditMode(false);
+
+                                                setTimeout(() => {
+                                                    window.location.reload();
+                                                }, 1000);
+
+                                            } else {
+
+                                                setProfileError(
+                                                    data.message || "Update failed"
+                                                );
+                                            }
+
+                                        } catch (err) {
+
+                                            console.error(err);
+
+                                            setProfileError("Something went wrong");
+                                        }
+                                    }}
+                                    className="bg-green-600 text-white px-4 py-2 rounded"
+                                >
+                                    Save Changes
+                                </button>
+
+                                {profileError && (
+                                    <p className="text-red-500 text-sm mt-3">
+                                        {profileError}
+                                    </p>
+                                )}
+
+                                {profileSuccess && (
+                                    <p className="text-green-600 text-sm mt-3">
+                                        {profileSuccess}
+                                    </p>
+                                )}
+
+                            </div>
+
+                        )}
 
                     </>
                 )}
 
-                {/* ================= EDIT PROFILE ================= */}
-                {editMode && (
-                    <div className="mt-4 bg-gray-100 p-4 rounded">
-                        <input
-                            value={form.firstname}
-                            onChange={(e) =>
-                                setForm({ ...form, firstname: e.target.value })
-                            }
-                            className="border p-2 mr-2 mb-2"
-                            placeholder="First Name"
-                        />
+                {/* ================= RESULTS SECTION ================= */}
 
-                        <input
-                            value={form.middlename}
-                            onChange={(e) =>
-                                setForm({ ...form, middlename: e.target.value })
-                            }
-                            className="border p-2 mr-2 mb-2"
-                            placeholder="Middle Name"
-                        />
+                {openSection === "results" && (
 
-                        <input
-                            value={form.lastname}
-                            onChange={(e) =>
-                                setForm({ ...form, lastname: e.target.value })
-                            }
-                            className="border p-2 mr-2 mb-2"
-                            placeholder="Last Name"
-                        />
+                    <div className="bg-white p-6 rounded-xl shadow">
 
-                        <div className="mt-2">
+                        <div className="flex justify-between items-center mb-4">
+
+                            <h2 className="text-2xl font-bold">
+                                My Results
+                            </h2>
+
                             <button
-                                onClick={async () => {
-                                    setProfileError("");
-                                    setProfileSuccess("");
-                                    try {
-                            const res = await fetch("/api/student/update-self", {
-                                        method: "POST",
-                                        headers: { "Content-Type": "application/json" },
-                                        body: JSON.stringify(form),
-                                     });
-
-                            const data = await res.json();
-
-                                        if (data.success) {
-
-                                            setProfileSuccess(
-                                                "Profile updated successfully"
-                                            );
-
-                                            setEditMode(false);
-
-                                        } else {
-
-                                            setProfileError(
-                                                data.message || "Update failed"
-                                            );
-                                        }
-
-                                    } catch (err) {
-
-                                        setProfileError("Something went wrong");
-                                    }
-                                }}
-                                className="bg-green-600 text-white px-3 py-1"
+                                onClick={downloadPDF}
+                                className="bg-blue-600 text-white px-4 py-2 rounded-lg"
                             >
-                                Save
+                                Download PDF
                             </button>
 
-                            {profileError && (
-                                <p className="text-red-500 text-sm mt-2">
-                                    {profileError}
-                                </p>
-                            )}
-
-                            {profileSuccess && (
-                                <p className="text-green-600 text-sm mt-2">
-                                    {profileSuccess}
-                                </p>
-                            )}
                         </div>
-                    </div>
-                )}
-            </div>
 
-            <div className="flex justify-between items-center mb-4 p-3">
-                <LogoutButton />
-            </div>
+                        {results.length === 0 ? (
+
+                            <p>No results available yet.</p>
+
+                        ) : (
+
+                            <div className="overflow-x-auto">
+
+                                <table className="w-full border">
+
+                                    <thead>
+
+                                        <tr className="bg-gray-100">
+
+                                            <th className="p-3 border">Class</th>
+                                            <th className="p-3 border">Subject</th>
+                                            <th className="p-3 border">Score</th>
+                                            <th className="p-3 border">Term</th>
+                                            <th className="p-3 border">Session</th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        {results.map((r: any) => (
+
+                                            <tr key={r._id} className="border-t">
+
+                                                <td className="p-3 border">
+                                                    {r.className}
+                                                </td>
+
+                                                <td className="p-3 border">
+                                                    {r.subject}
+                                                </td>
+
+                                                <td className="p-3 border">
+                                                    {r.score}
+                                                </td>
+
+                                                <td className="p-3 border">
+                                                    {r.term}
+                                                </td>
+
+                                                <td className="p-3 border">
+                                                    {r.session}
+                                                </td>
+
+                                            </tr>
+
+                                        ))}
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        )}
+
+                    </div>
+
+                )}
+
+                {/* ================= RESOURCES SECTION ================= */}
+
+                {openSection === "resources" && (
+
+                    <div className="bg-white p-6 rounded-xl shadow">
+
+                        <h2 className="text-2xl font-bold mb-4">
+                            Student Resources
+                        </h2>
+
+                        <p className="text-gray-600">
+                            Access learning materials and files.
+                        </p>
+
+                        <Link href="/resources">
+
+                            <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg">
+
+                                Open Resources
+
+                            </button>
+
+                        </Link>
+
+                    </div>
+
+                )}
+
+            </section>
 
         </main>
     );

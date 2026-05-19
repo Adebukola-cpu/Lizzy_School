@@ -177,7 +177,7 @@ export default function ResourcesPage() {
                                 <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white">
 
                                     <span className="inline-block bg-white/20 px-3 py-1 rounded-full text-xs font-bold mb-4">
-                                        {item.type}
+                                        {item.category}
                                     </span>
 
                                     <h3 className="text-xl font-bold line-clamp-2">

@@ -31,3 +31,11 @@ declare module "next-auth/jwt" {
         role: string;
     }
 }
+
+type Resource = {
+    _id: string;
+    title: string;
+    description: string;
+    category: string;
+    type: string;
+};

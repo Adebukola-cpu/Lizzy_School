@@ -158,7 +158,7 @@ export default function Signup() {
 
                         if (!validatePassword(value)) {
                             setPasswordError(
-                                "Must contain letter, number, symbol and 6+ characters"
+                                "Must contain 6+ characters, letter, number and symbol"
                             );
                         } else {
                             setPasswordError("");
