@@ -291,35 +291,36 @@ export default function Navbar() {
 
                     )}
 
-                    {/* MOBILE BUTTONS */}
-
                     <div className="flex flex-col gap-3 pt-4">
 
-                        <Link href="/login">
-
-                            <button className="w-full border border-blue-600 text-blue-600 py-3 rounded-lg font-medium">
-
-                                Login
-
-                            </button>
-
+                        <Link
+                            href="/login"
+                            className="block font-medium"
+                            onClick={() => setMobileMenu(false)}
+                        >
+                            Login
                         </Link>
 
-                        <Link href="/signup">
-
-                            <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium">
-
-                                Sign Up
-
-                            </button>
-
+                        <Link
+                            href="/signup"
+                            className="block font-medium"
+                            onClick={() => setMobileMenu(false)}
+                        >
+                            Signup
                         </Link>
 
-                        <div className="w-full justify-between items-center font-medium rounded-lg  transition">
+                        <div
+                            onClick={() => setMobileMenu(false)}
+                            className="w-full"
+                        >
                             <LogoutButton />
                         </div>
 
                     </div>
+
+                    {/* MOBILE BUTTONS */}
+
+                    
 
                 </div>
 
